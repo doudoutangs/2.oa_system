@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bank.project.oa.mapper.BankNoticeMapper">
+  <resultMap id="BaseResultMap" type="com.bank.project.oa.domain.BankNotice">
+    <id column="id" jdbcType="TINYINT" property="id" />
+    <result column="level" jdbcType="VARCHAR" property="level" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="publish_time" jdbcType="VARCHAR" property="publishTime" />
+    <result column="publish_user_id" jdbcType="VARCHAR" property="publishUserId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, level, title, content, publish_time, publish_user_id,status, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from oa_notice
+    where id = #{id}
+  </select>
+  <select id="selectByExample" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from oa_notice
+    <where>
+      <if test="title != null and title != ''">
+         title like concat('%', #{title}, '%')
+      </if>
+      <if test="level != null and level != ''">
+        AND level  = #{level}
+      </if>
+    </where>
+  </select>
+  <delete id="deleteById" parameterType="String">
+  delete from oa_notice where id = #{id}
+  </delete>
+  <delete id="deleteByIds" parameterType="String">
+    delete from oa_notice where id in
+    <foreach item="id" collection="array" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
+  <insert id="insertSelective" parameterType="com.bank.project.oa.domain.BankNotice">
+    insert into oa_notice
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="level != null">
+        level,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="publishTime != null">
+        publish_time,
+      </if>
+      <if test="publishUserId != null">
+        publish_user_id,
+      </if>
+        create_time,update_time
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="level != null">
+        #{level},
+      </if>
+      <if test="title != null">
+        #{title},
+      </if>
+      <if test="content != null">
+        #{content},
+      </if>
+      <if test="publishTime != null">
+        #{publishTime},
+      </if>
+      <if test="publishUserId != null">
+        #{publishUserId},
+      </if>
+      sysdate(),sysdate()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bank.project.oa.domain.BankNotice">
+    update oa_notice
+    <set>
+      <if test="level != null">
+        level = #{level},
+      </if>
+      <if test="title != null">
+        title = #{title},
+      </if>
+      <if test="content != null">
+        content = #{content},
+      </if>
+      <if test="publishTime != null">
+        publish_time = #{publishTime},
+      </if>
+      <if test="publishUserId != null">
+        publish_user_id = #{publishUserId},
+      </if>
+      <if test="status != null">
+        status = #{status},
+      </if>
+        update_time = sysdate()
+    </set>
+    where id = #{id}
+  </update>
+</mapper>

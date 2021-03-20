@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bank.project.oa.mapper.AssetOperateMapper">
+    <resultMap id="BaseResultMap" type="com.bank.project.oa.domain.AssetOperate">
+        <id column="id" jdbcType="TINYINT" property="id"/>
+        <result column="asset_id" jdbcType="TINYINT" property="assetId"/>
+        <result column="abrade_rate" jdbcType="VARCHAR" property="abradeRate"/>
+        <result column="operate_user_id" jdbcType="VARCHAR" property="operateUserId"/>
+        <result column="operate_date" jdbcType="VARCHAR" property="operateDate"/>
+        <result column="num" jdbcType="VARCHAR" property="operateNum"/>
+        <result column="operate_type" jdbcType="VARCHAR" property="operateType"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, asset_id, abrade_rate, operate_user_id, operate_date, num, operate_type, create_time
+  </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from oa_asset_operate
+        where id = #{id}
+    </select>
+    <select id="countTypeTotal" parameterType="String" resultType="String">
+        select
+        sum(num)
+        from oa_asset_operate
+        where operate_type = #{operateType}
+    </select>
+    <select id="count30DayOperateTotal" parameterType="String" resultType="java.util.Map">
+        SELECT
+          operateDate.day as day,if(sum(a.num),sum(a.num),0)as num
+        from OA_ASSET_OPERATE a
+        right JOIN
+          (
+            select DATE_SUB(curdate(), interval(cast(help_topic_id as signed) ) day) day
+            from mysql.help_topic
+            where
+             <![CDATA[ help_topic_id  < day(last_day(curdate()))  ]]>
+            order by help_topic_id desc
+          ) operateDate
+        on operateDate.day = a.operate_date
+        and a.operate_type = #{operateType}
+        group by  operateDate.day
+
+    </select>
+    <select id="selectList" parameterType="com.bank.project.oa.domain.AssetOperate" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from oa_asset_operate
+        <where>
+            <if test="assetId != null and assetId != ''">
+                and asset_id = #{assetId}
+            </if>
+            <if test="operateType != null  and operateType != ''">
+                and operate_type = #{operateType}
+            </if>
+        </where>
+    </select>
+    <select id="selectListByAssetId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from oa_asset_operate
+        <where>
+            asset_id = #{assetId}
+        </where>
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from oa_asset_operate
+    where id = #{id}
+  </delete>
+    <insert id="insertSelective" parameterType="com.bank.project.oa.domain.AssetOperate">
+        insert into oa_asset_operate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="assetId != null">
+                asset_id,
+            </if>
+            <if test="abradeRate != null">
+                abrade_rate,
+            </if>
+            <if test="operateUserId != null">
+                operate_user_id,
+            </if>
+            <if test="operateDate != null">
+                operate_date,
+            </if>
+            <if test="operateNum != null">
+                num,
+            </if>
+            <if test="operateType != null">
+                operate_type,
+            </if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="assetId != null">
+                #{assetId},
+            </if>
+            <if test="abradeRate != null">
+                #{abradeRate},
+            </if>
+            <if test="operateUserId != null">
+                #{operateUserId},
+            </if>
+            <if test="operateDate != null">
+                #{operateDate},
+            </if>
+            <if test="operateNum != null">
+                #{operateNum},
+            </if>
+            <if test="operateType != null">
+                #{operateType},
+            </if>
+            sysdate()
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.bank.project.oa.domain.AssetOperate">
+        update oa_asset_operate
+        <set>
+            <if test="assetId != null">
+                asset_id = #{assetId},
+            </if>
+            <if test="abradeRate != null">
+                abrade_rate = #{abradeRate},
+            </if>
+            <if test="operateUserId != null">
+                operate_user_id = #{operateUserId},
+            </if>
+            <if test="operateDate != null">
+                operate_date = #{operateDate},
+            </if>
+            <if test="operateNum != null">
+                num = #{operateNum},
+            </if>
+            <if test="operateType != null">
+                operate_type = #{operateType},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

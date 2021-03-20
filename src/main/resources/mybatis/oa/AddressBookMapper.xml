@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bank.project.oa.mapper.AddressBookMapper">
+  <resultMap id="BaseResultMap" type="com.bank.project.oa.domain.AddressBook">
+    <id column="id" jdbcType="TINYINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="dept_name" jdbcType="VARCHAR" property="deptName" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="order_num" jdbcType="INTEGER" property="orderNum" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, dept_name, mobile, order_num, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from oa_address_book
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from oa_address_book
+    where id = #{id}
+  </delete>
+  <delete id="deleteByIds" parameterType="String">
+    delete from oa_address_book where id in
+    <foreach item="id" collection="array" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
+  <insert id="insertSelective" parameterType="com.bank.project.oa.domain.AddressBook">
+    insert into oa_address_book
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="deptName != null">
+        dept_name,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="orderNum != null">
+        order_num,
+      </if>
+        create_time,update_time
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name},
+      </if>
+      <if test="deptName != null">
+        #{dept_name},
+      </if>
+      <if test="mobile != null">
+        #{mobile},
+      </if>
+      <if test="orderNum != null">
+        #{orderNum},
+      </if>
+      sysdate(),sysdate()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bank.project.oa.domain.AddressBook">
+    update oa_address_book
+    <set>
+      <if test="name != null">
+        name = #{name},
+      </if>
+      <if test="deptName != null">
+        dept_name = #{dept_name},
+      </if>
+      <if test="mobile != null">
+        mobile = #{mobile},
+      </if>
+      <if test="orderNum != null">
+        order_num = #{orderNum},
+      </if>
+        update_time = sysdate()
+    </set>
+    where id = #{id}
+  </update>
+
+  <select id="selectByExample" parameterType="com.bank.project.oa.domain.AddressBook" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from oa_address_book
+    <where>
+      <if test="name != null and name != ''">
+         name like concat('%', #{name}, '%')
+      </if>
+      <if test="deptName != null and deptName != ''">
+        AND dept_name = #{dept_name}
+      </if>
+      <if test="mobile != null and mobile != ''">
+        AND mobile like concat('%', #{mobile}, '%')
+      </if>
+    </where>
+  </select>
+</mapper>
