@@ -1,2 +1,0 @@
-Application Version: ${bank.version}
-Spring Boot Version: ${spring-boot.version}
