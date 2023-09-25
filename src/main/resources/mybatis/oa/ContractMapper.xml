@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bank.project.oa.mapper.ContractMapper">
+  <resultMap id="BaseResultMap" type="com.bank.project.oa.domain.Contract">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="part_a" jdbcType="VARCHAR" property="partA" />
+    <result column="part_b" jdbcType="VARCHAR" property="partB" />
+    <result column="sign_date" jdbcType="VARCHAR" property="signDate" />
+    <result column="person_a" jdbcType="VARCHAR" property="personA" />
+    <result column="person_b" jdbcType="VARCHAR" property="personB" />
+    <result column="amount" jdbcType="REAL" property="amount" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, part_a, part_b, sign_date, person_a, person_b, amount, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from oa_contract
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from oa_contract
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByIds" parameterType="String">
+    delete from oa_contract where id in
+    <foreach item="id" collection="array" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
+  <insert id="insertSelective" parameterType="com.bank.project.oa.domain.Contract">
+    insert into oa_contract
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="partA != null">
+        part_a,
+      </if>
+      <if test="partB != null">
+        part_b,
+      </if>
+      <if test="signDate != null">
+        sign_date,
+      </if>
+      <if test="personA != null">
+        person_a,
+      </if>
+      <if test="personB != null">
+        person_b,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      create_time,update_time
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="partA != null">
+        #{partA,jdbcType=VARCHAR},
+      </if>
+      <if test="partB != null">
+        #{partB,jdbcType=VARCHAR},
+      </if>
+      <if test="signDate != null">
+        #{signDate,jdbcType=VARCHAR},
+      </if>
+      <if test="personA != null">
+        #{personA,jdbcType=VARCHAR},
+      </if>
+      <if test="personB != null">
+        #{personB,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=REAL},
+      </if>
+      sysdate(),sysdate()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bank.project.oa.domain.Contract">
+    update oa_contract
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="partA != null">
+        part_a = #{partA,jdbcType=VARCHAR},
+      </if>
+      <if test="partB != null">
+        part_b = #{partB,jdbcType=VARCHAR},
+      </if>
+      <if test="signDate != null">
+        sign_date = #{signDate,jdbcType=VARCHAR},
+      </if>
+      <if test="personA != null">
+        person_a = #{personA,jdbcType=VARCHAR},
+      </if>
+      <if test="personB != null">
+        person_b = #{personB,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=REAL},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExample" parameterType="com.bank.project.oa.domain.Contract" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from oa_contract
+    <where>
+      <if test="name != null and name != ''">
+        name like '%${name}%'
+      </if>
+    </where>
+  </select>
+</mapper>

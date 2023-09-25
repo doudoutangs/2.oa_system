@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bank.project.oa.mapper.BookOperateMapper">
+  <resultMap id="BaseResultMap" type="com.bank.project.oa.domain.BookOperate">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="lend_date" jdbcType="VARCHAR" property="lendDate" />
+    <result column="return_date" jdbcType="VARCHAR" property="returnDate" />
+    <result column="book_id" jdbcType="BIGINT" property="bookId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, lend_date, return_date, book_id, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from oa_book_operate
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from oa_book_operate
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" parameterType="com.bank.project.oa.domain.BookOperate">
+    insert into oa_book_operate
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="lendDate != null">
+        lend_date,
+      </if>
+      <if test="returnDate != null">
+        return_date,
+      </if>
+      <if test="bookId != null">
+        book_id,
+      </if>
+      create_time,update_time
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="lendDate != null">
+        #{lendDate,jdbcType=VARCHAR},
+      </if>
+      <if test="returnDate != null">
+        #{returnDate,jdbcType=VARCHAR},
+      </if>
+      <if test="bookId != null">
+        #{bookId,jdbcType=BIGINT},
+      </if>
+      sysdate(),sysdate()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bank.project.oa.domain.BookOperate">
+    update oa_book_operate
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="lendDate != null">
+        lend_date = #{lendDate,jdbcType=VARCHAR},
+      </if>
+      <if test="returnDate != null">
+        return_date = #{returnDate,jdbcType=VARCHAR},
+      </if>
+      <if test="bookId != null">
+        book_id = #{bookId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExample" parameterType="com.bank.project.oa.domain.UserPlan" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from oa_book_operate
+    <where>
+      <if test="userId != null and userId != ''">
+        user_id = #{userId}
+      </if>
+    </where>
+  </select>
+</mapper>
